@@ -1,37 +1,35 @@
 import TopicsModel from '../../models/topicsModel'
+import { Error } from 'mongoose'
 
-const Topics = {
+class Topics {
   async getAllTopics (req, res, next) {
-    console.log(1)
-    const { tab = 'all', page = 1, limit = 10 } = req.query
+    const { q = '', tab = 'all', page = 1, limit = 10 } = req.query
+    let query = tab !== 'all' ? { tab } : {}
+    if (q.trim()) {
+      query = Object.assign(query, { $or: [{ title: new RegExp(q) }] })
+    }
     try {
-      const allTopics = await TopicsModel.where(tab !== 'all' ? { tab } : {})
-      allTopics.skip((page - 1) * limit)
-      allTopics.limit(parseInt(limit))
-      allTopics.exec((err, data) => {
-        if (err) {
-          return next(err)
-        }
-        res.send({
-          code: 1,
-          message: 'ok',
-          data
-        })
+      const allTopics = await TopicsModel.where(query).skip((page - 1) * limit).limit(parseInt(limit))
+      res.send({
+        code: 1,
+        message: 'ok',
+        data: allTopics
       })
     } catch (err) {
       res.send({
         code: 0,
-        message: '获取文章列表失败',
+        message: new Error(err),
         type: 'ERROR_GET_TOPIC_LIST'
       })
     }
-  },
+  }
   async postOneTopics (req, res, next) {
+    console.log(req.body)
     try {
       const data = await TopicsModel.create(req.body)
       res.send({
         msg: 'ok',
-        code: 0,
+        code: 1,
         data
       })
     } catch (err) {
@@ -44,4 +42,4 @@ const Topics = {
   }
 }
 
-export default Topics
+export default new Topics()

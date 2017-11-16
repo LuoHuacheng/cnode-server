@@ -1,9 +1,10 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 import session from 'express-session'
 import connectMongo from 'connect-mongo'
 import config from './config'
-import db from './mongoDB'
+import './mongoDB'
 import router from './routes'
 
 const app = express()
@@ -14,7 +15,7 @@ app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
   res.header('Access-Control-Allow-Credentials', true) // 可以带cookies
   res.header('X-Powered-By', '4.16.2')
-  if (req.method == 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     res.send(200)
   } else {
     next()
@@ -23,6 +24,7 @@ app.all('*', (req, res, next) => {
 
 const MongoStore = connectMongo(session)
 app.use(cookieParser())
+app.use(bodyParser.json())
 app.use(
   session({
     name: config.session.name,

@@ -1,31 +1,6 @@
-// import Topics from '../controller/topics'
-import TopicsModel from '../models/topicsModel'
+import Topics from '../controller/topics'
 
 export default app => {
-  app.get('/', async (req, res, next) => {
-    console.log(1)
-    const { tab = 'all', page = 1, limit = 10 } = req.query
-    try {
-      const allTopics = await TopicsModel.where(tab !== 'all' ? { tab } : {})
-      allTopics.skip((page - 1) * limit)
-      allTopics.limit(parseInt(limit))
-      allTopics.exec((err, data) => {
-        if (err) {
-          return next(err)
-        }
-        res.send({
-          code: 1,
-          message: 'ok',
-          data
-        })
-      })
-    } catch (err) {
-      res.send({
-        code: 0,
-        message: '获取文章列表失败',
-        type: 'ERROR_GET_TOPIC_LIST'
-      })
-    }
-  })
-  // app.post('/topic', Topics.postOneTopics())
+  app.get('/', Topics.getAllTopics)
+  app.post('/topic', Topics.postOneTopics)
 }
