@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import md5 from 'md5'
 
 const Schema = mongoose.Schema
 
@@ -10,6 +11,10 @@ const TopicsSchema = new Schema(
         index: true
       },
       avatar_url: String
+    },
+    author_id: {
+      type: String,
+      default: md5(new mongoose.Types.ObjectId()).substr(4, 24)
     },
     title: String,
     tab: String,
