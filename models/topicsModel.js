@@ -5,6 +5,10 @@ const Schema = mongoose.Schema
 
 const TopicsSchema = new Schema(
   {
+    id: {
+      type: String,
+      default: new mongoose.Types.ObjectId()
+    },
     author: {
       login_name: {
         type: String,
