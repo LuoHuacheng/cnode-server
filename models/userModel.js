@@ -11,12 +11,15 @@ const UserSchema = new Schema({
   login_name: {
     type: String,
     required: true,
-    length: [4, 20]
+    maxlength: 20,
+    minlength: 4,
+    index: true
   },
   password: {
     type: String,
     required: true,
-    length: [6, 18]
+    maxlength: 18,
+    minlength: 6
   },
   avatar_url: {
     type: String,

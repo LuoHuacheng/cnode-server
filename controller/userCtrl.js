@@ -20,6 +20,14 @@ class User {
     }
   }
   async register (req, res, next) {
+    const user = await UserModel.findOne({ login_name: req.body.login_name })
+    if (user && user.login_name === req.body.login_name) {
+      res.send({
+        msg: '该用户已存在',
+        code: 201,
+        data: null
+      })
+    }
     try {
       const data = await UserModel.create(req.body)
       res.send({
@@ -38,13 +46,18 @@ class User {
   async login (req, res, next) {
     const { login_name, password } = req.body
     try {
-      const userInfo = await UserModel.findOne({ login_name })
-      const isExisted = password === userInfo.password
-      req.session.token_id = userInfo.author_id
-      res.send({
-        msg: 'ok',
-        code: 1,
-        data: isExisted
+      const userInfo = await UserModel.findOne({ login_name, password })
+      req.session.regenerate(() => {
+        req.session.token_id = userInfo.author_id
+        req.session.save()
+        res.send({
+          msg: 'ok',
+          code: 1,
+          data: {
+            login_name: userInfo.login_name,
+            token_id: req.session.token_id
+          }
+        })
       })
     } catch (err) {
       res.send({
@@ -53,6 +66,23 @@ class User {
         type: 'ERROR_USER_LOGIN'
       })
     }
+  }
+  async logout (req, res, next) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.send({
+          msg: '退出登录失败',
+          code: 104,
+          data: null
+        })
+        return
+      }
+      res.send({
+        msg: '退出成功',
+        code: 1,
+        data: null
+      })
+    })
   }
 }
 
