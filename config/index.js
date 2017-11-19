@@ -2,12 +2,13 @@ const config = {
   port: 1024,
   url: 'mongodb://localhost:27017/cnode',
   session: {
-    name: 'HC',
-    secret: 'HC',
+    name: 'SID',
+    secret: 'SID',
+    resave: false,
     cookie: {
       httpOnly: true,
       secure: false,
-      maxAge: 365 * 24 * 60 * 60 * 1000
+      maxAge: 30 * 24 * 60 * 60 * 1000
     }
   }
 }
