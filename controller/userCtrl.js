@@ -1,7 +1,7 @@
 import UserModel from '../models/userModel';
 
 class User {
-  async getUser(req, res, next) {
+  async getUser(req, res) {
     const { existed = false } = req.query;
     try {
       const userInfo = await UserModel.findOne({ login_name: req.params.name });
@@ -19,7 +19,7 @@ class User {
       });
     }
   }
-  async register(req, res, next) {
+  async register(req, res) {
     const user = await UserModel.findOne({ login_name: req.body.login_name });
     if (user && user.login_name === req.body.login_name) {
       res.send({
@@ -43,7 +43,7 @@ class User {
       });
     }
   }
-  async login(req, res, next) {
+  async login(req, res) {
     const { login_name, password } = req.body;
     try {
       const userInfo = await UserModel.findOne({ login_name, password });
@@ -67,7 +67,7 @@ class User {
       });
     }
   }
-  async logout(req, res, next) {
+  async logout(req, res) {
     req.session.destroy(err => {
       if (err) {
         res.send({

@@ -2,7 +2,7 @@ import TopicsModel from '../models/topicsModel';
 import UserModel from '../models/userModel';
 
 class Topics {
-  async getAllTopics(req, res, next) {
+  async getAllTopics(req, res) {
     const { q = '', tab = 'all', page = 1, limit = 10 } = req.query;
     let query = tab !== 'all' ? { tab } : {};
     if (q.trim()) {
@@ -26,7 +26,7 @@ class Topics {
       });
     }
   }
-  async postOneTopic(req, res, next) {
+  async postOneTopic(req, res) {
     if (!req.session.token_id) {
       res.status(403).send({
         code: 101,
@@ -57,7 +57,7 @@ class Topics {
       });
     }
   }
-  deleteOneTopic(req, res, next) {
+  deleteOneTopic(req, res) {
     if (!req.session.token_id) {
       res.status(403).send({
         code: 101,
@@ -82,7 +82,7 @@ class Topics {
       });
     });
   }
-  async updateOneTopic(req, res, next) {
+  async updateOneTopic(req, res) {
     if (!req.session.token_id) {
       res.status(403).send({
         code: 101,
@@ -115,7 +115,7 @@ class Topics {
       });
     });
   }
-  async getOneTopic(req, res, next) {
+  async getOneTopic(req, res) {
     const id = req.params.id;
     try {
       const data = await TopicsModel.findOne({ id });

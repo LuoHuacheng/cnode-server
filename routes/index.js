@@ -2,7 +2,7 @@ import Topics from '../controller/topicsCtrl';
 import User from '../controller/userCtrl';
 
 export default app => {
-  app.get('/', Topics.getAllTopics);
+  app.get('/topics', Topics.getAllTopics);
   app.post('/topic', Topics.postOneTopic);
   app.delete('/topic/delete/:id', Topics.deleteOneTopic);
   app.put('/topic/update/:id', Topics.updateOneTopic);
